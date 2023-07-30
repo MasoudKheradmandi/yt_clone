@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<section class="user-account">
+	<div class="container">
+		<div class="row">
+			{% include 'layout/user_panel_sidebar.html' %}
+			<div class="col-lg-9">
+				<div class="video-details">
+					<div class="account-details">
+						<div class="account_details_content">
+							<div class="change-pswd">
+								<h2 class="hd-op">ویرایش حساب</h2>
+								<form method='post' enctype="multipart/form-data">
+									{% csrf_token %}
+									<div class="ch-pswd">
+										<label>نام کانال</label>
+										<input type="text" name="channel_name" value='{{profile.channel_name}}' placeholder="نام کانال">
+									</div><!--ch-pswd end-->
+									<div class="ch-pswd">
+										عکس کانال
+										<input type="file" name="image" accept="image/*">
+										{% if profile.image %}
+										عکس فعلی : <a href='{{profile.image.url}}'>{{profile.image}}</a>
+										{% endif %}
+									</div><!--ch-pswd end-->
+									<div class="ch-pswd">
+										بنر کانال
+										<input type="file" name="banner" accept="image/*">
+										{% if profile.banner %}
+										بنر فعلی : <a href='{{profile.banner.url}}'>{{profile.banner}}</a>
+										{% endif %}
+									</div><!--ch-pswd end-->
+									<div class="ch-pswd">
+										<label>درباره من</label>
+										<input type="text" name="description" value='{{profile.description}}' placeholder="درباره من">
+									</div><!--ch-pswd end-->
+									<div class="ch-pswd">
+										<label>لینک های مفید</label>
+										{{form.links}}
+									</div><!--ch-pswd end-->
+									<div class="ch-pswd">
+										<button type="submit">بروزرسانی</button>
+									</div><!--ch-pswd end-->
+								</form>
+							</div><!--change-pswd end-->
+						</div><!--account_details_content end-->
+						<div class="clearfix"></div>
+					</div><!--Account Details end-->
+				</div><!--video-details end-->
+			</div>
+		</div>
+	</div>
+</section><!--user-account end-->
+
+{% endblock body %}
+
+{% block js %}
+<script type="text/javascript">
+	CKEDITOR.replace("id_links");
+</script>
+{% endblock %}

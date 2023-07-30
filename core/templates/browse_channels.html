@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<section class="browse-sec">
+	<div class="container">
+		<div class="browse_catgs">
+			<div class="brws-head">
+				<h3>کانال های محبوب</h3>
+				<div class="clearfix"></div>
+				<div class="row">
+					{% for channel in channels %}
+					<div class="col-lg-3 col-md-3 col-sm-6 col-12">
+						<div class="videoo">
+							<div class="vid_thumbainl">
+								<a href="{% url 'youtube:channel_home_page' channel.id %}" title="">
+									<img src="{{channel.banner.url}}" alt="">
+								</a>	
+							</div><!--vid_thumbnail end-->
+							<div class="video_info">
+								<div class="vid_thumb">
+									<img src="{{channel.image.url}}" alt="">
+								</div>
+								<h4><a href="{% url 'youtube:channel_home_page' channel.id %}" title="">{{channel.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+								<span>{{channel.count_followers}} اشتراک . {{channel.all_yt_videos.count}} ویدیو . {{channel.all_yt_visit}}  بازدید</span>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div><!--brws-head end-->
+		</div><!--</div> end-->
+	</div>
+</section><!--browse-sec end-->
+
+{% endblock body %}

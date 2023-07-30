@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<section class="mn-sec">
+	<div class="container">
+
+		<div class="row">
+			<div class="col-lg-9">
+				<div class="mn-vid-sc single_video">
+					<div class="vid-1">
+						<div class="vid-pr">
+							<video
+								id="my-video"
+								class="video-js"
+								controls
+								preload="auto"
+								width="640"
+								height="264"
+								poster="{{video.thumbnail.url}}"
+								data-setup="{}"
+								>
+								<source src="{{video.video.url}}" type="video/mp4" />
+								<source src="{% static 'demo_video.html' %}" type="video/webm" />
+							</video>
+						</div><!--vid-pr end-->
+						<div class="vid-info">
+							<h3>{{video.title}}</h3>
+							<div class="info-pr">
+								<span>{{video.visited}} بازدید</span>
+								<br>
+								<span>انتشار یافته در {{video.created.year}}/{{video.created.month}}/{{video.created.day}}</span>
+
+								<ul class="pr_links">
+									<li>
+										<button id="like-video" data-toggle="tooltip" data-placement="top">
+											<i class="icon-thumbs_up_fill"></i>
+										</button>
+										<div id="like-number">{{video.like.all.count}}</div>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div><!--info-pr end-->
+						</div><!--vid-info end-->
+					</div><!--vid-1 end-->
+					<div class="abt-mk">
+						<div class="info-pr-sec">
+							<div class="vcp_inf cr">
+								<div class="vc_hd">
+									<img src="{{video.youtuber.image.url}}" alt="">
+								</div>
+								<div class="vc_info pr">
+									<h4><a href="#" title="">{{video.youtuber.channel_name}}</a></h4>
+									<span>تعداد دنبال کننده  {{video.youtuber.count_followers}}</span>
+								</div>
+							</div><!--vcp_inf end-->							
+							<ul class="chan_cantrz">
+								<li>
+									{% if is_followed %}
+									<a href="javascript:void(0)" id="follow-button" title=""  class="subscribe">دنبال می کنید</a>
+									{% else %}
+									<a href="javascript:void(0)" id="follow-button" title=""  class="subscribe">دنبال کردن</a>
+									{% endif %}
+								</li>
+								<li>
+									<a href="#" title="" class="donate">هدیه دهید</a>
+								</li>
+							</ul><!--chan_cantrz end-->
+							<ul class="df-list">
+								<li>
+									<button id='add-to-playlist' data-toggle="tooltip" data-placement="top" title="افزودن به لیست پخش">
+										<i class="icon-add_to_playlist"></i>
+									</button>
+								</li>
+								<li>
+									<button class='watch_later' data-videoid='{{video.id}}' data-toggle="tooltip" data-placement="top" title="بعدا میبینم">
+										<i class="icon-watch_later"></i>
+									</button>
+								</li>
+								<li>
+									<button data-toggle="tooltip" data-placement="top" title="اشتراک">
+										<i class="icon-share"></i>
+									</button>
+								</li>
+								<li>
+									<button data-toggle="tooltip" data-placement="top" title="گزارش تخلف">
+										<i class="icon-flag"></i>
+									</button>
+								</li>
+							</ul><!--df-list end-->
+							<div class="clearfix"></div>
+						</div>
+						<div class="clearfix"></div>
+						<div class="about-ch-sec">
+							<div class="abt-rw">
+								<h4>درباره ویدیو : </h4>
+								{{video.description|safe}}
+							</div>
+							<div class="abt-rw tgs">
+								<h4>برچسب ها : </h4>
+								<ul>
+									{% for tag in video.tags.all %}
+									<li><a href="#" title="{{tag.name}}">#{{tag.name}}</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div><!--about-ch-sec end-->
+					</div><!--abt-mk end-->
+					<div class="cmt-bx">
+						<ul class="cmt-pr">
+							<li><span>{{comments.count}}</span> کامنت</li>
+							<li>
+								<span></span>
+							</li>
+						</ul>
+						<div class="clearfix"></div>
+						<div class="clearfix"></div>
+						<div class="vcp_inf pc">
+							<div class="vc_hd">
+								<img src="{{request.profile.image.url}}" alt="">
+							</div>
+							<form method='get'>
+								<input id='comment-body' type="text" name='body' placeholder="دیدگاه خود را بنویسید" required='required'>
+								<button id='save-comment' type="submit">ارسال دیدگاه</button>
+							</form>
+							<div class="clearfix"></div>
+						</div><!--cmt-bx end-->
+						<ul class="cmn-lst">
+							{% for comment in comments %}
+							<li>
+								<div class="vcp_inf">
+									<div class="vc_hd">
+										<img src="{{comment.profile.image.url}}" alt="">
+									</div>
+									<div class="coments">
+										{% if comment.is_pin_comment %}
+										<div class="pinned-comment">
+											<span><i class="icon-pinned"></i> پین شده توسط {{video.youtuber.channel_name}}</span>
+										</div>
+										{% endif %}
+										<h2>{{comment.profile.channel_name}} <small class="posted_dt"> . {{comment.days_passed}}</small></h2>
+										<p>{{comment.body}}</p>
+										{% if video.youtuber == request.profile %}
+										<ul class="cmn-i">
+											<li>
+												<a href="{% url 'youtube:delete_comment' comment.id %}?prev={{ request.path|urlencode }}" class='delete-comment'>
+													حذف
+												</a>
+											</li>
+											<li>
+												<a href="{% url 'youtube:pin_comment' comment.id %}?prev={{ request.path|urlencode }}" class='pin-comment'>
+													پین
+												</a>
+											</li>
+										</ul>
+										{% endif %}
+									</div><!--coments end-->
+								</div><!--vcp_inf end-->
+							</li>
+							{% endfor %}
+						</ul><!--comment list end-->
+					</div>
+				</div>
+			</div><!---col-lg-9 end-->
+			<div class="col-lg-3">
+				{% if is_play_list %}
+				<div class="playlist_view">
+					<div class="playlist_hd">
+						<h3>{{play_list.name}} - <span id='playlist-count'></span></h3>
+						<ul>
+							<li>
+								<a href="#" title="">
+									<i class="icon-add_to_playlist"></i>
+								</a>
+							</li>
+							<li>
+								<a href="#" title="">
+									<i class="icon-like"></i>
+								</a>
+							</li>
+						</ul>
+						<div class="clearfix"></div>
+					</div><!--playlist_hd end-->
+					<div class="clearfix"></div>
+					<ul class="videos_lizt mCustomScrollbar" data-mcs-theme="dark">
+						{% for  play_list_video in play_list.video.all  %}
+						{% if video != play_list_video %}
+						<li>
+							<div class="vidz_row">
+								<span class="vid_num">{{forloop.counter}}</span>
+								<div class="vidz_img">
+									<a href="{% url 'youtube:video_detail' play_list_video.id %}?playlist={{play_list.id}}" title="{{play_list_video.title}}">
+										<img src="{{play_list_video.thumbnail.url}}" style="height: 84px;width: 100px;">
+									</a>
+									<span class="vid-time">{{play_list_video.video_time}}</span>
+									<span class="watch_later" data-videoid='{{play_list_video.id}}'>
+										<i class="icon-watch_later_fill"></i>
+									</span>
+								</div><!--vidz_img end-->
+								<div class="video_info">
+									<h3><a href="{% url 'youtube:video_detail' play_list_video.id %}?playlist={{play_list.id}}">{{play_list_video.title}}</a></h3>
+									<h4><a href="{% url 'youtube:channel_home_page' play_list_video.youtuber.id %}" title="{{play_list_video.youtuber.channel_name}}">{{play_list_video.youtuber.channel_name}}</a></h4>
+								</div>
+							</div><!--vidz_row end-->
+						</li>
+						{% else %}
+						<input id='s-number' type='hidden' value='{{forloop.counter}}'>
+						{% endif %}
+
+						{% endfor %}
+					</ul><!--videos_lizt end-->
+				</div><!--playlist_view end-->
+				{% endif %}
+				<div class="sidebar">
+					<div class="vidz-prt">
+						<h2 class="sm-vidz">ویدیو های مشابه</h2>
+						<div class="clearfix"></div>
+					</div><!--vidz-prt end-->
+					<div class="videoo-list-ab">
+						{% for video in similar_videos %}
+						{% if forloop.counter == 2 %}
+						<div class="ad-rw">
+							<img src="{% static 'images/resources/ad-img.jpg' %}" alt="">
+						</div>
+						{% endif %}
+						<div class="videoo">
+							<div class="vid_thumbainl">
+								<a href="{% url 'youtube:video_detail' id=video.id %}" title="{{video.title}}">
+									<img src="{{video.thumbnail.url}}" alt="{{video.title}}">
+									<span class="vid-time">{{video.video_time}}</span>
+									<span class="watch_later" data-videoid='{{video.id}}'>
+										<i class="icon-watch_later_fill"></i>
+									</span>
+								</a>	
+							</div><!--vid_thumbnail end-->
+							<div class="video_info">
+								<h3><a href="{% url 'youtube:video_detail' id=video.id %}">{{video.title}}</a></h3>
+								<h4><a href="{% url 'youtube:channel_home_page' id=video.youtuber.id %}" title="{{video.youtuber.channel_name}}">{{video.youtuber.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+								<span>{{video.visited}} بازدید .<small class="posted_dt">{{video.days_passed}}</small></span>
+							</div>
+						</div><!--videoo end-->
+						{% endfor %}						
+					</div><!--videoo-list-ab end-->
+				</div><!--side-bar end-->
+			</div>
+		</div>
+	</div>
+</section><!--mn-sec end-->
+
+{% endblock body %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+	$('#like-video').click(function(){
+		$.ajax({
+			type : 'GET',
+			url : '{% url "youtube:like_video" %}',
+			data : {'video_id': '{{video.id}}',},
+			dataType : 'json',
+			success : function (data) {
+				if(data.status == 'added'){
+					$('#like-number').text(parseInt($('#like-number').text())+1)
+					alert('شما لایک کردید')
+				}else if(data.status == 'removed'){
+					$('#like-number').text(parseInt($('#like-number').text())-1)
+					alert('شما لایک خود را برداشتید')
+				}
+			},  
+			error: function(data){
+				alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+			}                                
+		});
+	});
+	$('#follow-button').click(function(){
+		$.ajax({
+			type : 'GET',
+			url : '{% url "youtube:follow_channel" %}',
+			data : {'yt_user': '{{video.youtuber.id}}'},
+			dataType : 'json',
+			success : function (data) {
+				if(data.status == 'added'){
+					$('#follow-button').text('دنبال می کنید')
+					alert('شما الان دنبال می کنید')
+				}else if(data.status == 'removed'){
+					$('#follow-button').text('دنبال کردن')
+					alert('شما الان دنبال نمی کنید')
+				}else if(data.status == 'same'){
+					alert('شما نمی توانید خودتان دنبال کنید.')
+				}
+			},  
+			error: function(data){
+				alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+			}                                
+		});
+	});	
+	$('#add-to-playlist').click(function(){
+		$.ajax({
+			type : 'GET',
+			url : '{% url "youtube:get_playlist" %}',
+			success : function (data) {
+				var text = '<ul>'
+				for (playlist of data.playlists) {
+					text = text + `<li onclick=addPlaylist('${playlist}')>` + playlist + '</li>'
+				}
+				text = text + '</ul>'
+				Swal.fire({
+					title: 'پلی لیست خود را انتخاب کنید.',
+					html: text,
+					icon: 'info',
+					confirmButtonText: 'ساخت پلی لیست جدید',
+					confirmButtonColor: '#3085d6',
+					showCancelButton: true,
+					cancelButtonText: 'برگشت',
+					cancelButtonColor: '#d33',
+					input: 'text',
+					inputAttributes: {
+						required: 'true'
+					},
+					}).then((result) => {
+					if (result.isConfirmed) {
+						createPlaylist(result)
+					}
+				});
+
+			},  
+			error: function(data){
+				alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+			}                                
+		});
+	});
+	$('#save-comment').click(function(e){
+		e.preventDefault()
+		value = $('#comment-body').val()
+		$.ajax({
+			type : 'GET',
+			url : '{% url "youtube:save_comment" %}',
+			data : {'comment_body': value,'video_id':'{{video.id}}'},
+			dataType : 'json',
+			success : function (data) {
+				$('#comment-body').val('')
+				Swal.fire({
+					icon:  data.icon,
+					text : data.status,
+				});
+			},  
+			error: function(data){
+				alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+			}                                
+		});
+	})	
+});
+function addPlaylist(name) {
+	$.ajax({
+		type : 'GET',
+		url : '{% url "youtube:add_video_to_playlist" %}',
+		data : {"playlist_name":name,'video_id': '{{video.id}}'},
+		dataType : 'json',
+		success : function (data) {
+			alert(data.status)
+		},  
+		error: function(data){
+			alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+		}                                
+	});	
+}
+function createPlaylist(result) {
+	$.ajax({
+		type : 'GET',
+		url : '{% url "youtube:create_playlist" %}',
+		data : {'playlist_name':result.value,'video_id': '{{video.id}}'},
+		dataType : 'json',
+		success : function(data){
+			alert(data.status)
+		},
+		error: function(data){
+			alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+		}, 
+	});
+	
+}
+window.onload = function playListCount(){
+	number = $('#s-number').val()
+	$('#playlist-count').text(number + '/ {{play_list.video.all.count}}')
+}
+</script>
+{% endblock js %}

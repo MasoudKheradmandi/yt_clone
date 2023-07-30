@@ -1,0 +1,41 @@
+{% load static %}
+<footer>
+    <div class="container">
+        <div class="top-footer">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ft-logo">
+                        <img src="{{sitesetting.logo.url}}" alt="">
+                    </div><!--ft-logo end-->
+                </div>
+                {% for footer in footer_one %}
+                <div class="col-lg-2 col-md-4 col-sm-6 col-12">
+                    <div class="widget">
+                        <h3 class="widget-title">{{footer.name}}</h3>
+                        <ul class="pages-link">
+                            {% for footer_two in footer.footertwo_set.all  %}
+                            <li><a href="{{footer_two.link}}" title="{{footer_two.name}}">{{footer_two.name}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="col-lg-6 col-md-12 col-sm-6 col-12">
+                    <div class="widget widget-information">
+                        <h3 class="widget-title">اطلاعات</h3>
+                        <p>{{sitesetting.footer_text}}</p>
+                    </div><!--widget-information end-->
+                </div>
+            </div>
+        </div><!--top-footer end-->
+        <div class="bottom-strip">
+            <p>© Thesoftkings.ir    <i class="icon-like"></i> ساخته شده در ایران</p>
+            <ul class="social-links">
+                <li><a href="#" title=""><i class="icon-facebook-official"></i></a></li>
+                <li><a href="#" title=""><i class="icon-twitter"></i></a></li>
+                <li><a href="#" title=""><i class="icon-instagram"></i></a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div><!--bottom-strip end-->
+    </div>
+</footer><!--footer end-->

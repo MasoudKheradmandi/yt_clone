@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load video_tags %}
+
+{% block body %}
+
+<section class="banner-section">
+	<div class="container">
+		<div class="banner-text">
+			<p class="bold-titr">فیلم هایتان را با دوستان خود به اشتراک بگذارید</p>
+			<a href="#" title="">ایجاد حساب کاربری</a>
+		</div><!--banner-text end-->
+		<h3 class="headline">ویدیو پربازدید امروز <a href="#" title="">فیلم سینمایی جومانجی</a></h3>
+	</div>
+</section><!--banner-section end-->
+
+<section class="services-sec">
+	<div class="container">
+		<div class="services-row">
+			<div class="row">
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="service-col">
+						<img src="{% static 'images/sv1.png' %}" alt="">
+						<h3>کسب درآمد از بازدیدها</h3>
+						<p>به ازای هر بازدید کسب درآمد کنید</p>
+					</div><!--service-col end-->
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="service-col">
+						<img src="{% static 'images/sv2.png' %}" alt="">
+						<h3>افزایش دنبال کنندگان</h3>
+						<p>به جامعه در حال رشد هزاره های جوان بپیوندید و طرفداران جدیدی پیدا کنید. </p>
+					</div><!--service-col end-->
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="service-col">
+						<img src="{% static 'images/sv3.png' %}" alt="">
+						<h3>انتقال ساده از یوتیوب</h3>
+						<p>فیلم های خود را از YouTube با یک کپی / چسباندن لینک آسان بارگذاری کنید.</p>
+					</div><!--service-col end-->
+				</div>
+				<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="service-col">
+						<img src="{% static 'images/sv4.png' %}" alt="">
+						<h3>کسب درآمد از دیجی کالا </h3>
+						<p>درآمد اضافه از طریق بازاریابی محصولات در کانال شما</p>
+					</div><!--service-col end-->
+				</div>
+			</div>
+		</div><!--services-row end-->
+	</div>
+</section><!--services-sec end-->
+
+<section class="vds-main">
+	<div class="vidz-row">
+		<div class="container">
+			<div class="vidz_sec">
+				<h3>ویدیو های جدید</h3>
+				<div class="vidz_list">
+					<div class="row">
+						{% for video in latest_videos %}
+						<div class="col-lg-3 col-md-6 col-sm-6 col-6 full_wdth">
+							<div class="videoo">
+								<div class="vid_thumbainl">
+									<a href="{% url 'youtube:video_detail' video.id %}" title="{{video.category.name}}">
+										<img src="{{video.thumbnail.url}}" alt="{{video.title}}">
+										<span class="vid-time">{{video.video_time}}</span>
+										<span class="watch_later" data-videoid='{{video.id}}'>
+											<i class="icon-watch_later_fill"></i>
+										</span>
+									</a>	
+								</div><!--vid_thumbnail end-->
+								<div class="video_info">
+									<h3><a href="{% url 'youtube:video_detail' video.id %}" title="{{video.title}}">{{video.title|truncatechars:35}}</a></h3>
+									<h4><a href="#" title="مشاهده کانال">{{video.youtuber.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+									<span>{{video.visited}} بازدید .<small class="posted_dt">{{video.days_passed}}</small></span>
+								</div>
+							</div><!--videoo end-->
+						</div>
+						{% endfor %}
+					</div>
+				</div><!--vidz_list end-->
+			</div><!--vidz_videos end-->
+		</div>
+	</div><!--vidz-row end-->
+	<div class="vidz-row">
+		<div class="container">
+			<div class="vidz_sec">
+				<h3>کانال های محبوب</h3>
+				<a href="{% url 'youtube:browse_channels' %}" title="" class="view-btn">نمایش همه</a>
+				<div class="vidz_list">
+					<div class="row">
+						{% for channel in channels %}
+						<div class="col-lg-3 col-md-6 col-sm-6 col-6 full_wdth">
+							<div class="videoo">
+								<div class="vcp_inf">
+									<div class="vc_hd">
+										<img src="{{channel.image.url}}" alt="">
+									</div>
+									<div class="vc_info">
+										<h4><a href="{% url 'youtube:channel_home_page' channel.id %}" title="">{{channel.channel_name}}</a></h4>
+									</div>
+								</div>
+							</div><!--videoo end-->
+						</div>
+						{% endfor %}
+					</div>
+				</div><!--vidz_list end-->
+			</div><!--vidz_videos end-->
+		</div>
+	</div><!--vidz-row end-->
+	<div class="vidz-row">
+		<div class="container">
+			<div class="vidz_sec">
+				<h3>ویدیوهای محبوب</h3>
+				<div class="vidz_list">
+					<div class="row">
+						{% for video in favorite_videos %}
+						<div class="col-lg-3 col-md-6 col-sm-6 col-6 full_wdth">
+							<div class="videoo">
+								<div class="vid_thumbainl">
+									<a href="{% url 'youtube:video_detail' video.id %}" title="{{video.category.name}}">
+										<img src="{{video.thumbnail.url}}" alt="{{video.title}}">
+										<span class="vid-time">{{video.video_time}}</span>
+										<span class="watch_later" data-videoid='{{video.id}}'>
+											<i class="icon-watch_later_fill"></i>
+										</span>
+									</a>	
+								</div><!--vid_thumbnail end-->
+								<div class="video_info">
+									<h3><a href="{% url 'youtube:video_detail' video.id %}" title="{{video.title}}">{{video.title|truncatechars:35}}</a></h3>
+									<h4><a href="#" title="مشاهده کانال">{{video.youtuber.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+									<span>{{video.visited}} بازدید .<small class="posted_dt">{{video.days_passed}}</small></span>
+								</div>
+							</div><!--videoo end-->
+						</div>
+						{% endfor %}
+					</div>
+				</div><!--vidz_list end-->
+			</div><!--vidz_videos end-->
+		</div>
+	</div><!--vidz-row end-->
+	<div class="vidz-row pop_channels">
+		<div class="container">
+			<div class="vidz_sec">
+				<h3>دسته بندی ها</h3>
+				<a href="{% url 'youtube:browse_category' %}" title="همه دسته بندی ها" class="view-btn">نمایش همه</a>
+				<div class="vidz_list">
+					<div class="row">
+						{% for category in categorys %}
+						<div class="col-lg-2 col-md-4 col-sm-4 col-6 full_wdth">
+							<div class="videoo">
+								<div class="vid_thumbainl">
+									<a href="#" title="{{category.name}}">
+										<img src="{{category.image.url}}" alt="{{category.name}}">
+									</a>	
+								</div><!--vid_thumbnail end-->
+								<div class="video_info">
+									<h3><a href="#">{{category.name}}</a></h3>
+									<span>{% count_category_video category.id %} ویدیو</span>
+								</div>
+							</div><!--videoo end-->
+						</div>
+						{% endfor %}
+					</div>
+				</div><!--vidz_list end-->
+			</div><!--vidz_videos end-->
+		</div>
+	</div><!--vidz-row end-->
+</section><!--vds-main end-->
+
+{% endblock body %}
+

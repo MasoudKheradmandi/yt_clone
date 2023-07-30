@@ -1,0 +1,10 @@
+django-environ
+django-ckeditor
+django-render-partial
+moviepy
+django-hitcount
+pytube
+django-storages
+boto3
+django-celery-beat
+gevent

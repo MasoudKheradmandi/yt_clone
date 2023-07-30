@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<section class="channel-cover">
+	{% if yt_profile.banner %}
+	<img src="{{yt_profile.banner.url}}" style="height: 147px;" alt="">
+	{% else %}
+	<img src="{% static 'images/resources/channel-banner.jpg' %}" alt="">
+	{% endif %}
+</section><!--channel-cover end-->
+
+<section class="videso_section">
+	<div class="info-pr-sec">
+		<div class="container">
+			<div class="vcp_inf cr">
+				<span class="vc_hd">
+					<img src="{{yt_profile.image.url}}" alt="">
+				</span>
+				<div class="vc_info pr">
+					<h4> {{yt_profile.channel_name}} <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+					<span>{{yt_profile.count_followers}} مشترکین</span>
+				</div>
+			</div><!--vcp_inf end-->
+			<ul class="chan_cantrz">
+				<li>
+					{% if is_followed %}
+					<a href="#" id="follow-button" title=""  class="subscribe">دنبال می کنید</a>
+					{% else %}
+					<a href="#" id="follow-button" title=""  class="subscribe">دنبال کردن</a>
+					{% endif %}
+				</li>
+				<li>
+					<a href="#" title="" class="donate"> هدیه دهید </a>
+				</li>
+			</ul><!--chan_cantrz end-->
+			<div class="search_form">
+				<form>
+					<input type="text" name="search" placeholder="جستجوی ویدیو">
+					<button type="submit">
+						<i class="icon-search"></i>
+					</button>
+				</form>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div><!--info-pr-sec end-->
+	<div class="history-lst tbY">
+		<div class="container">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+				<a class="nav-link active" id="videos_taab" data-toggle="tab" href="#vvideo_tabz" role="tab" aria-controls="videos_taab" aria-selected="true">خانه </a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" id="playlist-tab" data-toggle="tab" href="#playlist_tab" role="tab" aria-controls="playlist-tab" aria-selected="false"> لیست پخش</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" id="channels-tab" data-toggle="tab" href="#channels_tab" role="tab" aria-controls="channels-tab" aria-selected="false">کانال ها</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" id="about-tab" data-toggle="tab" href="#about_tab" role="tab" aria-controls="about-tab" aria-selected="false">درباره کانال</a>
+				</li>
+				<li class="nav-item">
+				<a class="nav-link" id="amazon-tab" data-toggle="tab" href="#amazong-tb" role="tab" aria-controls="amazon-tab" aria-selected="false">محصولات (به زودی)</a>
+				</li>
+			</ul><!--nav-tabs end-->
+			<div class="clearfix"></div>
+		</div>
+	</div><!--history-lst end-->
+	<div class="tab-content p-0" id="myTabContent">
+		<div class="tab-pane fade show active" id="vvideo_tabz" role="tabpanel" aria-labelledby="videos_taab">
+			<div class="videso_tb_details">
+				<div class="container">
+					<div class="vidz_sec">
+						<h3>آپلودها</h3>
+							<select style="float: left;" id="order-select" name="orderby" class="orderby" aria-label="Shop order">
+								<option value="-created">پیش فرض</option>
+								<option value="created">قدیمی ترین</option>
+							</select>
+						<div class="clearfix"></div>
+						<div class="vidz_list">
+							<div class="row">
+								{% for video in videos %}
+								<div class="col-lg-3 col-md-3 col-sm-6 col-6 full_wdth">
+									<div class="videoo">
+										<div class="vid_thumbainl">
+											<a href="{% url 'youtube:video_detail' video.id %}" title="{{video.category.name}}">
+												<img src="{{video.thumbnail.url}}" alt="{{video.title}}">
+												<span class="vid-time">{{video.video_time}}</span>
+												<span class="watch_later" data-videoid="{{video.id}}">
+													<i class="icon-watch_later_fill"></i>
+												</span>
+											</a>	
+										</div><!--vid_thumbnail end-->
+										<div class="video_info">
+											<h3><a href="{% url 'youtube:video_detail' video.id %}" title="{{video.title}}">{{video.title|truncatechars:35}}</a></h3>
+											<h4><a href="#" title="مشاهده کانال">{{video.youtuber.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+											<span>{{video.visited}} بازدید .<small class="posted_dt">{{video.days_passed}}</small></span>
+										</div>
+									</div><!--videoo end-->
+								</div>
+								{% endfor %}
+							</div>
+						</div><!--vidz_list end-->
+					</div><!--vidz_videos end-->
+				</div>
+			</div><!--videso_tb_details end-->
+		</div>
+		<div class="tab-pane fade" id="playlist_tab" role="tabpanel" aria-labelledby="playlist-tab">
+			<div class="playlist_tab">
+				{% for play_list in play_lists %}
+				<div class="viddz">
+					<div class="container">
+						<div class="vidz_sec">
+							<h3>{{play_list.name}}</h3>
+							<a href="#" title=""> نمایش همه </a>
+							{% if forloop.counter != 1 %}{% if yt_profile == request.profile %}<a href="#" class="delete-playlist" title="حذف لیست ویدیو" data-id='{{play_list.id}}' style="margin-left: 20px;"> حذف </a>{% endif %}{% endif %}
+							<div class="clearfix"></div>
+							<div class="vidz_list">
+								<div class="row">
+									{% for video in play_list.video.all %}
+									<div class="col-lg-3 col-md-3 col-sm-6 col-6 full_wdth">
+										<div class="videoo">
+											<div class="vid_thumbainl">
+												<a href="{% url 'youtube:video_detail' video.id %}?playlist={{play_list.id}}" title="{{video.category.name}}">
+													<img src="{{video.thumbnail.url}}" alt="{{video.title}}">
+													<span class="vid-time">{{video.video_time}}</span>
+													<span class="watch_later" data-videoid="{{video.id}}">
+														<i class="icon-watch_later_fill"></i>
+													</span>
+												</a>	
+											</div><!--vid_thumbnail end-->
+											<div class="video_info">
+												<h3><a href="{% url 'youtube:video_detail' video.id %}?playlist={{play_list.id}}" title="{{video.title}}">{{video.title|truncatechars:35}}</a></h3>
+												<h4><a href="{% url 'youtube:channel_home_page' video.youtuber.id %}" title="مشاهده کانال">{{video.youtuber.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+												<span>{{video.visited}} بازدید .<small class="posted_dt">{{video.days_passed}}</small></span>
+											</div>
+										</div><!--videoo end-->
+									</div>
+									{% endfor %}
+								</div>
+							</div><!--vidz_list end-->
+						</div><!--vidz_videos end-->
+					</div>
+				</div><!--viddz end-->
+				{% endfor %}
+			</div><!--home_tb_details end-->
+		</div>
+		<div class="tab-pane fade" id="channels_tab" role="tabpanel" aria-labelledby="channels-tab">
+			<div class="container">
+				<div class="browse_catgs">
+					<div class="brws-head">
+						<h3>کانال ها</h3>
+						<div class="clearfix"></div>
+						<div class="row">
+							{% for followed_channel in yt_profile.follow.all %}
+							<div class="col-lg-3 col-md-3 col-sm-6 col-12">
+								<div class="videoo">
+									<div class="vid_thumbainl">
+										<a href="{% url 'youtube:channel_home_page' followed_channel.id %}" title="">
+											{% if followed_channel.banner %}
+											<img src="{{followed_channel.banner.url}}" alt="">
+											{% else %}
+											<img src="{% static 'images/resources/cl1.jpg' %}" alt="">
+											{% endif %}
+										</a>
+									</div><!--vid_thumbnail end-->
+									<div class="video_info">
+										<div class="vid_thumb">
+											<img src="{{followed_channel.image.url}}" alt="">
+										</div>
+										<h4><a href="{% url 'youtube:channel_home_page' followed_channel.id %}" title="">{{followed_channel.channel_name}}</a> <span class="verify_ic"><i class="icon-tick"></i></span></h4>
+										<span>{{followed_channel.count_followers}} اشتراک . {{followed_channel.all_yt_videos.count}} ویدیو . {{followed_channel.all_yt_visit}}  بازدید</span>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+						</div>
+					</div><!--brws-head end-->
+				</div><!--browse_catgs end-->
+			</div>
+		</div>
+		<div class="tab-pane fade" id="about_tab" role="tabpanel" aria-labelledby="about-tab">
+			<div class="about_tab_content">
+				<div class="container">
+					<div class="description">
+						<div class="row">
+							<div class="col-lg-8">
+								<div class="decp_cotnet">
+									<h2 class="ab-fd">توضیحات </h2>
+									<p>{{yt_profile.description}}</p>
+								</div><!--abt-founder end-->
+								<div class="link-pr">
+									<h2 class="ab-fd"> لینک ها</h2>
+									{{yt_profile.links|safe}}
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="stats">
+									<h2 class="ab-fd">آمار</h2>
+									<ul>
+										<li>عضویت {{yt_profile.created_date.year}}/{{yt_profile.created_date.month}}/{{yt_profile.created_date.day}}</li>
+										<li>{{yt_profile.all_yt_visit}} بازدید</li>
+										<li>{{yt_profile.count_followers}} مشترکین</li>
+										<li>{{videos.count}} ویدیو</li>
+									</ul>
+								</div><!--stats end-->
+								<div class="flagg">
+									<ul class="df-list">
+										<li>
+											<button data-toggle="tooltip" data-placement="top" title="گزارش تخلف">
+												<i class="icon-flag"></i>
+											</button>
+										</li>
+										<li>
+											<button data-toggle="tooltip" data-placement="top" title="اشتراک">
+												<i class="icon-share"></i>
+											</button>
+										</li>
+									</ul>
+								</div><!--flagg end-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!--about_tab_content end-->
+		</div>
+		<div class="tab-pane fade" id="amazong-tb" role="tabpanel" aria-labelledby="amazon-tab">
+			<div class="container">
+				<div class="amz_products_content">
+					<div class="amazon">
+						<div class="abt-amz">
+							<div class="amz-hd">
+								<h2>جشنواره ویژه عید نوروز </h2>
+								<h3>کد تخفیف: <span> Aid 1400 </span> تخفیف 10 درصدی </h3>
+							</div><!--amz-hd end-->
+							<div class="amz-lg">
+								<img src="{% static 'images/resources/cp-logo.png' %}" alt="">
+							</div><!--amz-lg end-->
+							<div class="clearfix"></div>
+						</div><!--abt-amz end-->
+						<div class="amz-img-inf">
+							<div class="row">
+								<div class="col-lg-2 col-md-4 col-sm-6 col-6 full_wdth">
+									<div class="mg-inf">
+										<div class="img-sr">
+											<a href="#" title="">
+												<img src="{% static 'images/resources/pro1.png' %}" alt="">
+											</a>
+										</div>
+										<div class="info-sr">
+											<h3><a href="#" title="">لباس ورزشی مردانه هامون</a></h3>
+											<span>320 هزار تومان</span>
+										</div>
+									</div><!--mg-inf end-->
+								</div>
+							</div>
+						</div><!--amz-img-in-->
+					</div><!--amazon end-->
+					<div class="amazon">
+						<div class="abt-amz">
+							<div class="amz-hd">
+								<h2>جشنواره ویژه عید نوروز </h2>
+								<h3>کد تخفیف: <span> Aid 1400 </span> تخفیف 10 درصدی </h3>
+							</div><!--amz-hd end-->
+							<div class="amz-lg">
+								<img src="{% static 'images/resources/cp-logo.png' %}" alt="">
+							</div><!--amz-lg end-->
+							<div class="clearfix"></div>
+						</div><!--abt-amz end-->
+						<div class="amz-img-inf">
+							<div class="row">
+								<div class="col-lg-2 col-md-4 col-sm-6 col-6 full_wdth">
+									<div class="mg-inf">
+										<div class="img-sr">
+											<a href="#" title="">
+												<img src="{% static 'images/resources/pro1.png' %}" alt="">
+											</a>
+										</div>
+										<div class="info-sr">
+											<h3><a href="#" title="">لباس ورزشی مردانه هامون</a></h3>
+											<span>320 هزار تومان</span>
+										</div>
+									</div><!--mg-inf end-->
+								</div>
+							</div>
+						</div><!--amz-img-in-->
+					</div><!--amazon end-->
+				</div><!--amz_products_content end-->
+			</div>
+		</div>
+	</div>
+</section><!--Featured Videos end-->
+
+{% endblock body %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+	$('#follow-button').click(function(e){
+		e.preventDefault()
+		$.ajax({
+			type : 'GET',
+			url : '{% url "youtube:follow_channel" %}',
+			data : {'yt_user': '{{yt_profile.id}}'},
+			dataType : 'json',
+			success : function (data) {
+				if (data.status == 'fail'){
+					alert('لطفا قبل از لایک کردن وارد حساب خود شودید')
+				}else if(data.status == 'added'){
+					$('#follow-button').text('دنبال می کنید')
+					alert('شما الان دنبال می کنید')
+				}else if(data.status == 'removed'){
+					$('#follow-button').text('دنبال کردن')
+					alert('شما الان دنبال نمی کنید')
+				}else if(data.status == 'same'){
+					alert('شما نمی توانید خودتان دنبال کنید.')
+				}
+			},  
+			error: function(data){
+				alert('مشکلی پیش امده است لطفا دوباره امتحان کنید.');
+			}                                
+		});
+	});
+	$('.delete-playlist').click(function(){
+		id = $(this).data('id')
+		location.href="/delete_playlist/" + id + "/"
+	});
+	$('#order-select option[value="{{order_by}}"]').attr("selected", "selected");
+	$('#order-select').change(function(){
+		value = $('option:selected', this).val()
+		location.href = "{% url 'youtube:channel_home_page' yt_profile.id %}" + "?orderby=" + value
+	})		
+});
+</script>
+{% endblock js %}
