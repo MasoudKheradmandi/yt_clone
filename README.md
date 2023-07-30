@@ -21,7 +21,7 @@
 
 ## startproject
 ```bash
-git clone 
+git clone https://github.com/MasoudKheradmandi/yt_clone.git
 cd yt_clone
 pip install -r requirment.txt
 ```
